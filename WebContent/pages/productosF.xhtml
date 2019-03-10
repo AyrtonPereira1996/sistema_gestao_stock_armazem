@@ -1,0 +1,245 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">"WebContent/pages/productosF.xhtml"
+
+	<ui:define name="namePage">Funcionário | Visualização de produtos</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarFuncionario.xhtml" />
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuFuncionario.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Produtos</h1>
+
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+			<p:commandButton icon="ui-icon-circle-plus" value="Novo Produto"
+				oncomplete="PF('dlgProdNovo').show();"
+				actionListener="#{MBProducto.prepararInsercao}"
+				update=":frmProdNovo:pnProdNovo" />
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+
+		<div style="padding: 5px;">
+			<h:form id="frmProducto">
+				<p:dataTable id="tbProducto" widgetVar="tabelaProducto"
+					filteredValue="#{MBProducto.itensFiltrados}"
+					emptyMessage="Nenhum produto registado!" resizableColumns="true"
+					scrollable="true" value="#{MBProducto.itens}" var="item"
+					paginator="true" rows="9" paginatorPosition="top">
+
+					<f:facet name="header">Lista de Produtos</f:facet>
+
+
+					<p:column headerText="Artigo" width="60"
+						style="text-align: center;" sortBy="#{item.artigo}">
+						<h:outputText value="#{item.artigo}" />
+					</p:column>
+
+					<p:column headerText="Tipo de produtos" style="text-align: center;"
+						filterBy="#{item.tipoProducto}" filterPosition="bottom"
+						filterStyle="height:25px;">
+						<h:outputText value="#{item.tipoProducto}" />
+					</p:column>
+
+					<p:column headerText="Descrição" width="250"
+						style="text-align: center;" filterBy="#{item.descricao}"
+						filterPosition="bottom" filterStyle="height:25px;">
+						<h:outputText value="#{item.descricao}" />
+					</p:column>
+
+					<p:column headerText="Quantidade" width="100"
+						style="text-align: center;" sortBy="#{item.quantidade}">
+						<h:outputText value="#{item.quantidade}" />
+					</p:column>
+
+					<p:column headerText="Validade" width="105"
+						style="text-align: center;" sortBy="#{item.validade}">
+						<h:outputText value="#{item.validade}" />
+					</p:column>
+
+
+					<p:column headerText="Data de registo" style="text-align: center;"
+						sortBy="#{item.dataRegisto}">
+						<h:outputText value="#{item.dataRegisto}">
+							<f:convertDateTime type="date" timeZone="UTC"
+								pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Ações" style="text-align: center;" width="40">
+						<p:commandButton icon="ui-icon-plus"
+							oncomplete="PF('dlgProdAcrescimo').show();"
+							update=":frmProdAcrescimo:pnProdAcrescimo">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{MBProducto.producto}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+
+		</div>
+
+
+
+		<p:dialog widgetVar="dlgProdNovo" closable="false" resizable="false"
+			draggable="false" modal="true" appendTo="@(body)"
+			header="Registo de producto" height="490" width="550"
+			style="font-size: 1em; font-weight:normal;">
+			<h:form id="frmProdNovo">
+
+				<h:panelGrid columns="1">
+					<h:outputText
+						value="Para registar um produto ou bem deve preencher os campos abaixo." />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnProdNovo" columns="2" cellpadding="8">
+					<h:outputLabel value="*Artigo : " />
+					<h:inputText value="#{MBProducto.producto.artigo}" required="true"
+						requiredMessage="Preencha o campo de artigo!" maxlength="5"
+						size="6" />
+
+
+					<h:outputLabel value="*Tipo de produto :" />
+					<h:inputText value="#{MBProducto.producto.tipoProducto}"
+						required="true"
+						requiredMessage="Preencha o campo do tipo de produto!"
+						maxlength="50" size="20" />
+
+					<h:outputLabel value="*Descrição do produto :" />
+					<h:inputTextarea value="#{MBProducto.producto.descricao}" rows="8"
+						cols="20" resizable="false" required="true"
+						requiredMessage="Preencha o campo da descrição do produto!"
+						maxlength="100" />
+
+					<h:outputLabel value="*Quantidade : " />
+					<h:inputText value="#{MBProducto.producto.quantidade}"
+						required="true"
+						requiredMessage="Introduza a quantidade do produto!" size="6" />
+
+					<h:outputLabel value="*Validade do produto :" />
+					<h:panelGrid columns="2">
+						<p:inputText placeholder="Ano-Mês-Dia"
+							value="#{MBProducto.producto.validade}" required="true"
+							requiredMessage="Preencha se o produto tem validade ou não, caso tenha introduza a data!"
+							size="20" />
+						<p:commandButton icon="ui-icon-help"
+							onclick="PF('dlgValidadeHelp').show()" />
+					</h:panelGrid>
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" cellpadding="8">
+					<p:commandButton icon="ui-icon-disk" value="Guardar"
+						actionListener="#{MBProducto.insercao}"
+						update=":frmProducto:tbProducto :msg"
+						oncomplete="PF('dlgProdNovo').hide(); PF('tabelaProducto').clearFilters();" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgProdNovo').hide();" process="@this"
+						update=":frmProducto:tbProducto" />
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgProdAcrescimo" closable="false"
+			resizable="false" draggable="false" modal="true" appendTo="@(body)"
+			header="Informação do produto"
+			style="font-size: 1em; font-weight:normal;">
+
+			<h:form id="frmProdAcrescimo">
+
+				<h:panelGrid columns="1" cellpadding="8">
+					<h:outputText
+						value="Por favor insira a quantidade que pretende adicionar no estoque do armazém." />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnProdAcrescimo" columns="2" cellpadding="8">
+
+					<h:outputLabel value="Artigo :" />
+					<h:outputText value="#{MBProducto.producto.artigo}" />
+
+					<h:outputLabel value="Data de registo :" />
+					<h:outputText value="#{MBProducto.producto.dataRegisto}" />
+
+
+					<h:outputLabel value="Tipo de produto : " />
+					<h:outputText value="#{MBProducto.producto.tipoProducto}" />
+
+					<h:outputLabel value="Descrição do produto : " />
+					<h:outputText value="#{MBProducto.producto.descricao}" />
+
+
+					<h:outputLabel value="Quantidade de produto : " />
+					<h:inputText value="#{MBProducto.producto.quantidade}"
+						required="true"
+						requiredMessage="Introduza a quantidade do produto!" />
+
+					<h:outputLabel value="Validade do produto :" />
+					<h:outputText value="#{MBProducto.producto.validade}" />
+
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" cellpadding="8">
+					<p:commandButton icon="ui-icon-plus" value="Adicionar"
+						actionListener="#{MBProducto.acrescimoProducto}"
+						oncomplete="PF('dlgProdAcrescimo').hide(); PF('tabelaProducto').clearFilters();"
+						update=":frmProducto:tbProducto :msg" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgProdAcrescimo').hide();" process="@this"
+						update=":frmProducto:tbProducto" />
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgInfo" modal="true" appendTo="@(body)"
+			closable="true" draggable="false" resizable="false"
+			header="Informação da página"
+			style="font-size: 1em; font-weight:normal;">
+			<div style="text-align: justify;">
+				<p>
+
+					Na página de produtos poderá visualizar todos os produtos que
+					foram registados e também os produtos que estão no armazém em
+					estoque. Para confirmar é aconselhável que faça uma verificação
+					para confirmar se a quantidade atual corresponde com a que se
+					encontra no armazém. Nesta página também poderá:<br /> <br /> •
+					Adicionar novos produtos; <br /> <br /> • Aumentar a quantidade
+					do produto em estoque;<br /> <br />
+
+				</p>
+			</div>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgValidadeHelp" closable="true"
+			draggable="false" resizable="false" modal="true" appendTo="@(body)"
+			header="Informação sobre a validade do produto" height="125"
+			width="500" style="font-size: 1em; font-weight:normal;">
+
+			<div style="text-align: justify;">
+				<p>
+
+					Caso o produto ou bem não possua uma data de validade, por favor
+					introduza no campo de texto que o producto não possui uma data de
+					validade. <br /> Exemplo: Sem validade.
+
+				</p>
+			</div>
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

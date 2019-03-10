@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:form>
+
+		<h3 style="font-size: 1.3em; margin:0; margin-left: 2%; font-weight: 1.5; padding: 5px;" align="center">Funcionário</h3>
+		<p:menu style="border:none; width:90%;">
+
+				<p:menuitem icon="ui-icon-document" value="Requisições" outcome="/pages/requisicoesF.xhtml" />
+				<p:menuitem icon="ui-icon-check" value="Estoque de produtos" outcome="/pages/productosF.xhtml" />
+				<p:menuitem icon="ui-icon-tag" value="Departamentos" outcome="/pages/departamentosFunc.xhtml" />
+				<p:menuitem icon="ui-icon-person" value="Funcionários" outcome="/pages/funcionariosFunc.xhtml" />
+		</p:menu>
+
+	</h:form>
+
+</ui:composition>

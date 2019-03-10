@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title><ui:insert name="namePage">Layout do sistema</ui:insert></title>
+
+	<h:outputStylesheet library="css" name="estilo.css" />
+
+	<style>
+* {
+	/*padding: 0 !important;
+	margin: 0 !important;*/
+	
+	font-size: font-size: 1em !important; 
+	
+}
+
+
+body {
+	font-size: 1em !important;
+	background: #f2f1f1;
+}
+
+.ui-layout-west .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+.ui-layout-west {
+	z-index: 30 !important;
+	overflow: visible !important;
+}
+
+.ui-menu .ui-menu-list .ui-widget-header {
+	visibility: hidden;
+	margin: 0;
+}
+
+.ui-menu.ui-megamenu .ui-menu-parent .ui-menu-child {
+	box-shadow: none;
+	width: 125%;
+}
+</style>
+
+</h:head>
+<h:body style="background: #f2f1f1;">
+	<p:growl id="msg" life="6000" />
+
+
+	<p:layout fullPage="true" style="border:none;">
+
+		<p:layoutUnit position="west" size="230" id="westPanel"
+			style="border:none; font-size: 1em; background: #f2f1f1; ">
+			<ui:insert name="menu" />
+
+		</p:layoutUnit>
+
+
+
+		<p:layoutUnit size="60" position="north"
+			style="border:none; font-size: 1em; background: #f2f1f1; ">
+			<ui:insert name="cabecalho" />
+
+		</p:layoutUnit>
+
+
+
+		<p:layoutUnit position="center"
+			style="border:none; font-size: 1em; background: #f2f1f1;  ">
+			<ui:insert name="conteudo" />
+
+
+		</p:layoutUnit>
+
+
+
+
+	</p:layout>
+
+
+</h:body>
+</html>

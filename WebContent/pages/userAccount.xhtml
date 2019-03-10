@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">
+
+	<ui:define name="namePage">Admin | Visualização de contas de usuário</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarAdmin.xhtml"></ui:include>
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuAdmin.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Contas
+			de usuário</h1>
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+			<p:commandButton icon="ui-icon-circle-plus"
+				value="Nova conta de usuário" oncomplete="PF('dlgUserNovo').show();"
+				actionListener="#{MBLoginBean.prepararInserir}"
+				update=":frmUserNovo:pnUserNovo" />
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+
+
+
+		<div style="padding: 5px;">
+			<h:form id="frmUserAccounts">
+				<p:dataTable id="tbUserAccounts" widgetVar="tabelaUserAccounts"
+					filteredValue="#{MBLoginBean.itensListados}"
+					value="#{MBLoginBean.itens}" var="item"
+					emptyMessage="Nenhum usuário do sistema registado!"
+					scrollable="true">
+
+					<f:facet name="header">Lista dos Usuários do Sistema</f:facet>
+
+					<p:column headerText="Código de usuário" width="30"
+						style="text-align: center;">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+
+					<p:column headerText="Nome do funcionário" width="90"
+						style="text-align: center;">
+						<h:outputText
+							value="#{item.funcionario.nomeFuncionario} #{item.funcionario.apelidoFuncionario}" />
+
+					</p:column>
+
+					<p:column headerText="Nome de Usuário" style="text-align: center;"
+						width="50">
+						<h:outputText value="#{item.usuario}" />
+					</p:column>
+
+
+					<p:column headerText="Nível de acesso" style="text-align: center;"
+						width="50">
+						<h:outputText value="#{item.rolestring}" />
+					</p:column>
+
+					<p:column headerText="Data de registo" style="text-align: center;"
+						width="90" sortBy="#{item.dataRegisto}">
+						<h:outputText value="#{item.dataRegisto}">
+							<f:convertDateTime type="date" timeZone="UTC"
+								pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Ações" width="25"
+						style="text-align: center;">
+						<p:commandButton icon="ui-icon-trash"
+							oncomplete="PF('dlgUserExcluir').show();"
+							update=":frmUserExcluir:pnUserExluir">
+
+							<f:setPropertyActionListener value="#{item}"
+								target="#{MBLoginBean.usuario}"></f:setPropertyActionListener>
+
+						</p:commandButton>
+
+
+						<p:commandButton icon="ui-icon-pencil"
+							oncomplete="PF('dlgUserEditar').show();"
+							update=":frmUserEditar:pnUserEditar"
+							actionListener="#{MBLoginBean.prepararEditar}">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{MBLoginBean.usuario}"></f:setPropertyActionListener>
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</div>
+
+		<p:dialog widgetVar="dlgUserNovo" closable="false" resizable="false"
+			draggable="false" modal="true" appendTo="@(body)"
+			header="Registo de conta de usuário" style="font-size: 1em; font-weight:normal;">
+
+			<h:form id="frmUserNovo">
+
+				<h:panelGrid columns="1" cellpadding="8">
+					<h:outputText
+						value="Para registar uma conta de usuário deve preencher os campos abaixo." />
+				</h:panelGrid>
+
+
+				<h:panelGrid columns="2" cellpadding="8" id="pnUserNovo">
+
+					<h:outputLabel value="Nível de acesso ao sistema :" />
+					<h:selectOneRadio value="#{MBLoginBean.usuario.rolestring}">
+						<f:selectItem itemLabel="Admin" itemValue="Admin" />
+						<f:selectItem itemLabel="Administrador" itemValue="Administrador" />
+						<f:selectItem itemLabel="Funcionário" itemValue="Funcionário" />
+
+					</h:selectOneRadio>
+					<h:outputLabel value="*Nome do Funcionário : " />
+					<h:selectOneMenu value="#{MBLoginBean.usuario.funcionario.id}"
+						required="true"
+						requiredMessage="Selecione o código do funcionário">
+						<f:selectItem itemLabel="Escolha o código do funcionário" />
+						<f:selectItems value="#{MBLoginBean.itensFuncionario}" var="item"
+							itemLabel="#{item.id} #{item.nomeFuncionario} #{item.apelidoFuncionario}"
+							itemValue="#{item.id}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="*Nome do Usuário :" />
+					<h:inputText value="#{MBLoginBean.usuario.usuario}" size="21"
+						maxlength="20" required="true"
+						requiredMessage="Preencha o campo de nome do usuário" />
+
+					<h:outputLabel value="*Senha do Usuário :" />
+					<h:inputText value="#{MBLoginBean.usuario.senha}" size="21"
+						maxlength="20" required="true"
+						requiredMessage="Preencha o campo de senha do usuário" />
+
+
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" cellpadding="8">
+					<p:commandButton icon="ui-icon-disk" value="Gravar"
+						oncomplete="PF('dlgUserNovo').hide(); PF('tabelaUserAccounts').clearFilters();"
+						actionListener="#{MBLoginBean.inserir}"
+						update=":frmUserAccounts:tbUserAccounts :msg" />
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgUserNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgUserExcluir" closable="false"
+			draggable="false" resizable="false" modal="true" appendTo="@(body)"
+			header="Excluir conta de usuário" style="font-size: 1em; font-weight:normal;">
+			<h:form id="frmUserExcluir">
+
+				<h:panelGrid columns="1" cellpadding="8">
+					<h:outputText
+						value="Tem a certeza que pretende eliminar a seguinte conta de usuário?" />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnUserExluir" columns="2" cellpadding="8">
+					<h:outputLabel value="Código de Usuário :" />
+					<h:outputText value="#{MBLoginBean.usuario.id}" />
+
+					<h:outputLabel value="Data de registo :" />
+					<h:outputText value="#{MBLoginBean.usuario.dataRegisto}" />
+
+					<h:outputLabel value="Nome do funcionário :" />
+					<h:outputText
+						value="#{MBLoginBean.usuario.funcionario.nomeFuncionario} #{MBLoginBean.usuario.funcionario.apelidoFuncionario}" />
+
+					<h:outputLabel value="Nome do usuario :" />
+					<h:outputText value="#{MBLoginBean.usuario.usuario}" />
+
+					<h:outputLabel value="Senha do usuario :" />
+					<h:outputText value="#{MBLoginBean.usuario.senha}" />
+
+					<h:outputLabel value="Nível de acesso ao sistema :" />
+					<h:outputText value="#{MBLoginBean.usuario.rolestring}" />
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" cellpadding="8">
+					<p:commandButton icon="ui-icon-trash" value="Excluir"
+						actionListener="#{MBLoginBean.excluir}"
+						oncomplete="PF('dlgUserExcluir').hide(); PF('tabelaUserAccounts').clearFilters();"
+						update=":frmUserAccounts:tbUserAccounts :msg" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgUserExcluir').hide();" />
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgUserEditar" closable="false" resizable="false"
+			draggable="false" modal="true" appendTo="@(body)"
+			header="Editar conta usuário" style="font-size: 1em; font-weight:normal;">
+
+			<h:form id="frmUserEditar">
+
+				<h:panelGrid columns="1" cellpadding="8">
+					<h:outputText
+						value="Tem a certeza que pretende modificar os seguintes dados da conta do usuário?" />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnUserEditar" columns="2" cellpadding="8">
+
+					<h:outputLabel value="Código de Usuário :" />
+					<h:outputText value="#{MBLoginBean.usuario.id}" />
+
+					<h:outputLabel value="Data de registo :" />
+					<h:outputText value="#{MBLoginBean.usuario.dataRegisto}" />
+
+										<h:outputLabel value="*Nome do Funcionário : " />
+					<h:selectOneMenu value="#{MBLoginBean.usuario.funcionario.id}"
+						required="true"
+						requiredMessage="Selecione o código do funcionário">
+						<f:selectItem itemLabel="Escolha o código do funcionário" />
+						<f:selectItems value="#{MBLoginBean.itensFuncionario}" var="item"
+							itemLabel="#{item.id} #{item.nomeFuncionario} #{item.apelidoFuncionario}"
+							itemValue="#{item.id}" />
+					</h:selectOneMenu>
+					
+					<h:outputLabel value="Nome do usuario :" />
+					<h:inputText value="#{MBLoginBean.usuario.usuario}" />
+
+					<h:outputLabel value="Senha do usuario :" />
+					<h:inputText value="#{MBLoginBean.usuario.senha}" />
+
+					<h:outputLabel value="Nível de acesso ao sistema :" />
+					<h:selectOneRadio value="#{MBLoginBean.usuario.rolestring}">
+						<f:selectItem itemLabel="Admin" itemValue="Admin" />
+						<f:selectItem itemLabel="Administrador" itemValue="Administrador" />
+						<f:selectItem itemLabel="Funcionário" itemValue="Funcionário" />
+
+					</h:selectOneRadio>
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton icon="ui-icon-pencil" value="Editar"
+						actionListener="#{MBLoginBean.editar}"
+						update=":frmUserAccounts:tbUserAccounts :msg"
+						oncomplete="PF('dlgUserEditar').hide(); PF('tabelaUserAccounts').clearFilters();" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgUserEditar').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgInfo" closable="true" resizable="false"
+			draggable="false" header="Informação da página" modal="true"
+			appendTo="@(body)" style="font-size: 1em; font-weight:normal;">
+
+			<div style="text-align: justify;">
+				<p>
+					Na página de contas de usuários poderá visualizar todas as contas
+					de usuários que foram registados que por sua vez terão acesso ao
+					sistema. Nesta página também poderá :<br /> <br /> 
+					• Adicionar novas contas de usuários para o acesso ao sistema;<br /> <br /> 
+					• Editar contas de usuários;<br /> <br /> 
+					• Excluir contas de usuários;<br /> <br />
+				</p>
+			</div>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

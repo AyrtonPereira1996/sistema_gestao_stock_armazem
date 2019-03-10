@@ -1,0 +1,233 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">
+
+	<ui:define name="namePage">Funcionário | Visualização de requisições</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarFuncionario.xhtml" />
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuFuncionario.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Requisições</h1>
+
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+			<p:commandButton icon="ui-icon-circle-plus" value="Nova requisição"
+				actionListener="#{MBRequisicao.prepararInsercao}"
+				oncomplete="PF('dlgReqInserir').show();"
+				update=":frmReqInsercao:pnReqInsercao" />
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+
+		<div style="padding: 5px;">
+			<h:form id="frmRequisicao">
+				<p:dataTable id="tbRequisicao" widgetVar="tabelaRequisicao"
+					filteredValue="#{MBRequisicao.itensFiltrados}"
+					emptyMessage="Nenhuma requisição de produtos registada!"
+					value="#{MBRequisicao.itens}" var="item" scrollable="true" paginator="true" rows="7" paginatorPosition="top">
+
+					<f:facet name="header">Requisições dos Produtos</f:facet>
+
+					<p:column headerText="Código" style="text-align:center;" width="50">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+
+					<p:column headerText="Nome do departamento"
+						style="text-align:center;"
+						filterBy="#{item.departamento.nomeDepartamento}"
+						filterPosition="bottom" filterStyle="height:25px;" width="200">
+						<h:outputText value="#{item.departamento.nomeDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Nome do funcionário"
+						style="text-align:center;"
+						filterBy="#{item.funcionario.nomeFuncionario} #{item.funcionario.apelidoFuncionario}"
+						filterStyle="height:25px;" width="200">
+						<h:outputText
+							value="#{item.funcionario.nomeFuncionario} #{item.funcionario.apelidoFuncionario}" />
+					</p:column>
+
+					<p:column headerText="Tipo de Produto" style="text-align:center;"
+						filterBy="#{item.producto.tipoProducto}" filterPosition="bottom"
+						filterStyle="height:25px;" width="180">
+						<h:outputText value="#{item.producto.tipoProducto}" />
+					</p:column>
+
+					<p:column headerText="Data de requisição"
+						style="text-align:center;" sortBy="#{item.dataRequisicao}" width="170">
+						<h:outputText value="#{item.dataRequisicao}">
+							<f:convertDateTime type="date" timeZone="UTC"
+								pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Quantidade" width="105"
+						style="text-align:center;">
+						<h:outputText value="#{item.quantidade}" />
+					</p:column>
+
+					<p:column headerText="Ações" width="40" style="text-align:center;">
+						<p:commandButton icon="ui-icon-pencil"
+							update=":frmReqEdicao:pnReqEdicao"
+							oncomplete="PF('dlgReqEditar').show();"
+							actionListener="#{MBRequisicao.prepararEditar}">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{MBRequisicao.requisicao}" />
+						</p:commandButton>
+					</p:column>
+
+
+				</p:dataTable>
+			</h:form>
+		</div>
+
+
+
+		<p:dialog widgetVar="dlgReqInserir" closable="false" draggable="false"
+			resizable="false" modal="true" appendTo="@(body)"
+			header="Registo de requisição" style="font-size: 1em; font-weight:normal;">
+
+			<h:form id="frmReqInsercao">
+				<h:panelGrid columns="1">
+					<h:outputText
+						value="Para registar uma requisição deve preencher os campos abaixo." />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnReqInsercao" cellpadding="8" columns="2">
+
+					<h:outputLabel value="Departamento" />
+					<h:selectOneMenu
+						value="#{MBRequisicao.requisicao.departamento.idDepartamento}">
+						<f:selectItem itemLabel="Escolha um departamento" />
+						<f:selectItems value="#{MBRequisicao.itensDepartamento}"
+							var="item" itemLabel="#{item.nomeDepartamento}"
+							itemValue="#{item.idDepartamento}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Funcionário" />
+					<h:selectOneMenu value="#{MBRequisicao.requisicao.funcionario.id}">
+						<f:selectItem itemLabel="Selecione um funcionário" />
+						<f:selectItems value="#{MBRequisicao.itensFuncionario}" var="item"
+							itemLabel="#{item.nomeFuncionario} #{item.apelidoFuncionario} | #{item.departamento.nomeDepartamento}"
+							itemValue="#{item.id}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Lista de productos :" />
+					<h:selectOneMenu value="#{MBRequisicao.requisicao.producto.id}">
+						<f:selectItem itemLabel="Escolha o producto" />
+						<f:selectItems value="#{MBRequisicao.itensProducto}" var="item"
+							itemValue="#{item.id}"
+							itemLabel="#{item.tipoProducto} | Disponível : #{item.quantidade}" />
+
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Quantidade :" />
+					<h:inputText value="#{MBRequisicao.requisicao.quantidade}"
+						required="true"
+						requiredMessage="Por favor introduza a quantidade do producto que está a ser requisitado!" />
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" cellpadding="8">
+					<p:commandButton icon="ui-icon-disk" value="Guardar"
+						actionListener="#{MBRequisicao.inserir}"
+						update=":frmRequisicao:tbRequisicao :msg"
+						oncomplete="PF('dlgReqInserir').hide(); PF('tabelaRequisicao').clearFilters();" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgReqInserir').hide();" />
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgReqEditar" closable="false" draggable="false"
+			resizable="false" modal="true" appendTo="@(body)"
+			header="Editar registo" style="font-size: 1em; font-weight:normal;">
+			<h:form id="frmReqEdicao">
+
+				<h:panelGrid columns="1" cellpadding="8">
+					<h:outputText
+						value="Tem a certeza que pretende modificar a seguinte requisição?" />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnReqEdicao" cellpadding="8" columns="2">
+
+					<h:outputLabel value="Código de requisição : " />
+					<h:outputText value="#{MBRequisicao.requisicao.id}" />
+
+					<h:outputLabel value="Data de registo : " />
+					<h:outputText value="#{MBRequisicao.requisicao.dataRequisicao}" />
+
+					<h:outputLabel value="Departamento : " />
+					<h:selectOneMenu
+						value="#{MBRequisicao.requisicao.departamento.idDepartamento}">
+						<f:selectItem itemLabel="Escolha o departamento : " />
+						<f:selectItems value="#{MBRequisicao.itensDepartamento}"
+							var="item" itemValue="#{item.idDepartamento}"
+							itemLabel="#{item.nomeDepartamento}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Funcionário :" />
+					<h:selectOneMenu value="#{MBRequisicao.requisicao.funcionario.id}">
+						<f:selectItem itemLabel="Escolha o funcionário" />
+						<f:selectItems value="#{MBRequisicao.itensFuncionario}" var="item"
+							itemValue="#{item.id}"
+							itemLabel="#{item.nomeFuncionario} #{item.apelidoFuncionario} | #{item.departamento.nomeDepartamento}" />
+
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Producto :" />
+					<h:selectOneMenu value="#{MBRequisicao.requisicao.producto.id}">
+						<f:selectItem itemLabel="Escolha o Producto" />
+						<f:selectItems value="#{MBRequisicao.itensProducto}" var="item"
+							itemValue="#{item.id}"
+							itemLabel="#{item.tipoProducto} | Disponível : #{item.quantidade}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Quantidade :" />
+					<h:inputText value="#{MBRequisicao.requisicao.quantidade}" />
+
+
+				</h:panelGrid>
+
+				<h:panelGrid cellpadding="8" columns="2">
+					<p:commandButton icon="ui-icon-pencil" value="Editar"
+						actionListener="#{MBRequisicao.editar}"
+						update=":frmRequisicao:tbRequisicao :msg"
+						oncomplete=" PF('dlgReqEditar').hide();  PF('tabelaRequisicao').clearfilters();" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgReqEditar').hide();" />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+		<p:dialog widgetVar="dlgInfo" header="Informação da página"
+			closable="true" draggable="false" resizable="false" modal="true"
+			appendTo="@(body)" style="font-size: 1em; font-weight:normal;">
+			<div style="text-align: justify;">
+				<p>
+					Na página de requisições poderá visualizar todas as requisições
+					registadas no sistema. Nesta página também poderá: <br /> <br />
+					• Registar novas requisições; <br /> <br /> • Apagar requisições;
+					<br /> <br /> • Editar requisição;<br /> <br />
+
+
+				</p>
+			</div>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

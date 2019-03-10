@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div>
+		<h:form>
+			<h3
+				style="font-size: 1.3em; margin: 0; margin-left: 2%; font-weight: 1.5; padding: 5px;"
+				align="center">Admin</h3>
+			<p:menu style="border:none; width:90%; margin-left: 2%;">
+					<p:menuitem icon="ui-icon-clock" value="Acessos ao sistema"
+						outcome="/pages/usersAcess.xhtml" />
+					<p:menuitem icon="ui-icon-key" value="Contas de usuário"
+						outcome="/pages/userAccount.xhtml" />
+					<p:menuitem icon="ui-icon-tag" outcome="/pages/departamentosAdmin.xhtml" value="Departamentos" />
+					<p:menuitem icon="ui-icon-person" value="Funcionários"
+						outcome="/pages/funcionarioAdmin.xhtml" />
+
+			</p:menu>
+		</h:form>
+	</div>
+
+</ui:composition>

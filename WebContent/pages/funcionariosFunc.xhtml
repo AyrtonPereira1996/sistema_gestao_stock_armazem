@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">
+
+	<ui:define name="namePage">Funcionário | Visualização de Funcionários</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarFuncionario.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuFuncionario.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Funcionários</h1>
+
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+
+			<p:commandButton icon="ui-icon-circle-plus" value="Novo funcionário"
+				oncomplete="PF('dlgfunInserir').show();  "
+				update=":frmfunInsercao:pnfunInsercao :msg"
+				actionListener="#{MBFuncionario.prepararInsercao}" />
+
+
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+
+		<div style="padding: 5px;">
+			<h:form id="frmFuncionario">
+				<p:dataTable id="tbFuncionario" widgetVar="tabelaFuncionario"
+					value="#{MBFuncionario.itens}" var="item"
+					emptyMessage="Nenhum funcionário registado!" scrollable="true"
+					filteredValue="#{MBFuncionario.itensFiltrados}" style="width:100%;">
+
+					<f:facet name="header">Lista dos Funcionários</f:facet>
+
+					<p:column headerText="Código" width="50"
+						style="text-align: center;">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+
+					<p:column headerText="Departamento" width="170"
+						style="text-align: center;"
+						filterBy="#{item.departamento.nomeDepartamento}"
+						filterPosition="bottom" filterStyle="height:25px;">
+						<h:outputText value="#{item.departamento.nomeDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Nome completo" width="200"
+						style="text-align: center;"
+						filterBy="#{item.nomeFuncionario} #{item.apelidoFuncionario}"
+						filterStyle="height:25px;" filterPosition="bottom">
+						<h:outputText
+							value="#{item.nomeFuncionario} #{item.apelidoFuncionario}" />
+					</p:column>
+
+
+					<p:column headerText="Sexo" width="40" style="text-align: center;"
+						filterBy="#{item.sexoFuncionario}" filterPosition="bottom"
+						filterStyle="height:25px;">
+						<h:outputText value="#{item.sexoFuncionario}" />
+					</p:column>
+
+					<p:column headerText="Cargo" width="120"
+						style="text-align: center;" filterBy="#{item.cargoFuncionario}"
+						filterPosition="bottom" filterStyle="height:25px;">
+						<h:outputText value="#{item.cargoFuncionario}" />
+					</p:column>
+
+					<p:column headerText="E-mail" width="270"
+						style="text-align: center;">
+						<h:outputText value="#{item.enderecoElectronico}" />
+					</p:column>
+
+
+					<p:column headerText="Contato" width="100"
+						style="text-align: center;">
+						<h:outputText value="#{item.contacto}" />
+					</p:column>
+
+					<p:column headerText="Data de registo" width="200"
+						style="text-align: center;" sortBy="#{item.dataRegisto}">
+						<h:outputText value="#{item.dataRegisto}">
+							<f:convertDateTime type="date" timeZone="UTC"
+								pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:form>
+		</div>
+
+		<p:dialog widgetVar="dlgInfo" closable="true" resizable="false"
+			draggable="false" modal="true" appendTo="@(body)"
+			header="Informação da página" style="font-size: 1em; font-weight:normal;">
+			<div style="text-align: justify;">
+				<p>
+					Na página de funcionários poderá visualizar todos os funcionários
+					da Faculdade Ciências Sociais e Políticas que foram registados no
+					sistema com a respectiva informação de cada funcionário:<br /> <br />
+					• Código do funcionário;<br /> <br /> • Departamento a que
+					pertence;<br /> <br /> • Nome;<br /> <br /> • Apelido;<br /> <br />
+					• Sexo;<br /> <br /> • Cargo;<br /> <br /> • E-mail;<br /> <br />
+					• Contacto;<br /> <br /> • Data de registo;<br /> <br />
+
+				</p>
+			</div>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgfunInserir" closable="false" resizable="false"
+			draggable="false" modal="true" appendTo="@(body)"
+			header="Registo de funcionário" height="550" style="font-size: 1em; font-weight:normal;" >
+
+
+
+			<h:form id="frmfunInsercao">
+				<h:panelGrid id="pnfunInsercao" columns="1" cellpadding="8">
+
+					<h:panelGrid columns="1">
+						<h:outputText
+							value="Para registar um funcionário deve preencher os campos abaixo." />
+
+					</h:panelGrid>
+
+					<p:outputLabel value="*Nome do funcionário : " />
+					<h:inputText value="#{MBFuncionario.funcionario.nomeFuncionario}"
+						maxlength="50" size="30" required="true"
+						requiredMessage="Preencha o campo de nome do funcionário!"
+						styleClass="inputTxt" />
+
+					<p:outputLabel value="*Apelido do funcionário : " />
+					<h:inputText
+						value="#{MBFuncionario.funcionario.apelidoFuncionario}"
+						maxlength="30" size="30" required="true"
+						requiredMessage="Preencha o campo de apelido do funcionário!"
+						styleClass="inputTxt" />
+
+					<h:panelGrid columns="2">
+						<p:outputLabel value="*Sexo : " />
+						<h:selectOneRadio
+							value="#{MBFuncionario.funcionario.sexoFuncionario}"
+							required="true" requiredMessage="Escolha o sexo do funcionário!">
+							<f:selectItem itemLabel="Masculino" itemValue="M" />
+							<f:selectItem itemLabel="Femenino" itemValue="F" />
+						</h:selectOneRadio>
+					</h:panelGrid>
+
+					<p:outputLabel value="*Cargo : " />
+					<h:inputText value="#{MBFuncionario.funcionario.cargoFuncionario}"
+						maxlength="40" size="30" required="true"
+						requiredMessage="Preecha o campo do cargo do funcionário!"
+						styleClass="inputTxt" />
+
+					<h:panelGrid columns="2">
+						<p:outputLabel value="*Departamento : " />
+						<h:selectOneMenu
+							value="#{MBFuncionario.funcionario.departamento.idDepartamento}"
+							required="true"
+							requiredMessage="Escolha o departamento a que o funcionário pertence!">
+							<f:selectItem itemLabel="Selecione uma opção" />
+							<f:selectItems value="#{MBFuncionario.comboDepartamento}"
+								var="item" itemValue="#{item.idDepartamento}"
+								itemLabel="#{item.nomeDepartamento}" />
+						</h:selectOneMenu>
+					</h:panelGrid>
+
+					<p:outputLabel value="*E-mail : " />
+					<h:inputText
+						value="#{MBFuncionario.funcionario.enderecoElectronico}"
+						maxlength="50" size="30" styleClass="inputTxt" />
+
+					<h:outputLabel value="*Contacto : " />
+					<h:inputText value="#{MBFuncionario.funcionario.contacto}"
+						maxlength="13" size="15" required="true"
+						requiredMessage="Preencha o campo de contacto do funcionário!"
+						style="border-radius:10;" />
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" cellpadding="8">
+					<p:commandButton icon="ui-icon-disk" value="Gravar"
+						actionListener="#{MBFuncionario.inserir}"
+						update=":frmFuncionario:tbFuncionario :msg"
+						oncomplete="PF('dlgfunInserir').hide(); PF('tabelaFuncionario').clearFilters();" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgfunInserir').hide(); " />
+				</h:panelGrid>
+
+
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>
+

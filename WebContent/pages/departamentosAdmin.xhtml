@@ -1,0 +1,242 @@
+<?xml version="1.0"  ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">
+
+	<ui:define name="namePage">Admin | Visualização de departamentos</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarAdmin.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuAdmin.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Departamentos</h1>
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+
+			<p:commandButton icon="ui-icon-circle-plus" value="Novo Departamento"
+				oncomplete="PF('dlgFormDepartamento').show();"
+				actionListener="#{MBDepartamento.prepararInsercao}"
+				update=":frmRegDepartamento:pnDepartamento :msg" />
+
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+
+
+		<div style="padding: 5px;">
+			<h:form id="frmDepartamento">
+				<p:dataTable id="tbDepartamento" widgetVar="tabelaDepartamento"
+					value="#{MBDepartamento.itens}" var="item"
+					emptyMessage="Nenhum Departamento registado!" scrollable="true"
+					filteredValue="#{MBDepartamento.itensListados}">
+
+					<f:facet name="header">Lista dos Departamentos</f:facet>
+
+					<p:column headerText="Código do Departamento"
+						style="text-align: center;">
+						<h:outputText value="#{item.codDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Nome do Departamento"
+						style="text-align: center;" filterBy="#{item.nomeDepartamento}"
+						filterStyle="height:25px;" filterPosition="bottom">
+						<h:outputText value="#{item.nomeDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Nome do Coordenador"
+						style="text-align: center;" filterBy="#{item.nomeCoordenador}"
+						filterPosition="bottom" filterStyle="height:25px;">
+						<h:outputText value="#{item.nomeCoordenador}" />
+					</p:column>
+
+					<p:column headerText="Data de registo" style="text-align: center;"
+						sortBy="#{item.dataRegisto}">
+						<h:outputText value="#{item.dataRegisto}">
+							<f:convertDateTime type="date" pattern="dd/MM/yyyy HH:dd:ss" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Ações" width="80"
+						style="text-align: center;">
+						<p:commandButton icon="ui-icon-trash"
+							oncomplete="PF('dlgDepartamentoExclusao').show();"
+							update=":frmExcluir:pnExcluir">
+
+							<f:setPropertyActionListener value="#{item}"
+								target="#{MBDepartamento.departamento}">
+							</f:setPropertyActionListener>
+						</p:commandButton>
+
+						<p:commandButton icon="ui-icon-pencil"
+							oncomplete="PF('dlgDepartamentoEdicao').show();"
+							update=":frmEditar:pnEditar">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{MBDepartamento.departamento}"></f:setPropertyActionListener>
+						</p:commandButton>
+
+					</p:column>
+
+
+				</p:dataTable>
+			</h:form>
+		</div>
+
+
+		<p:dialog widgetVar="dlgFormDepartamento" closable="false"
+			resizable="false" draggable="false" header="Registo de Departamento"
+			modal="true" appendTo="@(body)" style="font-size: 1em; font-weight:normal;">
+
+			<h:form id="frmRegDepartamento">
+
+				<h:panelGrid columns="1">
+					<h:outputText
+						value="Para registar um departamento deve preencher os campos abaixo." />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnDepartamento" columns="2" cellpadding="8">
+					<h:outputLabel value="*Código do departamento : " />
+					<h:inputText size="8" maxlength="4"
+						value="#{MBDepartamento.departamento.codDepartamento}"
+						required="true" requiredMessage="Preencha o campo do código!" />
+
+					<h:outputLabel value="*Nome do Departamento : " />
+					<h:inputText size="35" maxlength="30"
+						value="#{MBDepartamento.departamento.nomeDepartamento}"
+						required="true"
+						requiredMessage="Preencha o campo de nome do Departamento!" />
+
+					<h:outputLabel value="*Nome do coordenador : " />
+					<h:inputText size="35" maxlength="30"
+						value="#{MBDepartamento.departamento.nomeCoordenador}"
+						required="true"
+						requiredMessage="Preencha o campo de nome do Coordenador do Departamento!" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" cellpadding="8">
+					<p:commandButton icon="ui-icon-disk" value="Guardar"
+						actionListener="#{MBDepartamento.inserir}"
+						oncomplete="PF('dlgFormDepartamento').hide(); PF('tabelaDepartamento').clearFilters();"
+						update=":frmDepartamento:tbDepartamento :msg" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgFormDepartamento').hide();" process="@(this)" />
+
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+
+
+		<p:dialog widgetVar="dlgDepartamentoExclusao" closable="false"
+			resizable="false" draggable="false" modal="false" appendTo="@(body)"
+			header="Excluir Departamento" style="font-size: 1em; font-weight:normal;">
+			<h:form id="frmExcluir">
+
+				<h:panelGrid columns="1" cellpadding="8">
+					<h:outputText
+						value="Tem a certeza que pretende eliminar o seguinte departamento?" />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnExcluir" columns="2" cellpadding="8">
+					<h:outputText value="Código departamento : " />
+					<h:outputText
+						value="#{MBDepartamento.departamento.codDepartamento}" />
+
+					<h:outputLabel value="Data de registo : " />
+					<h:outputText value="#{MBDepartamento.departamento.dataRegisto}" />
+
+					<h:outputText value="Nome do departamento : " />
+					<h:outputText
+						value="#{MBDepartamento.departamento.nomeDepartamento}" />
+
+					<h:outputText value="Nome do coordenador : " />
+					<h:outputText
+						value="#{MBDepartamento.departamento.nomeCoordenador}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton icon="ui-icon-trash" value="Excluir"
+						update=":frmDepartamento:tbDepartamento :msg"
+						actionListener="#{MBDepartamento.excluir}"
+						oncomplete="PF('dlgDepartamentoExclusao').hide(); PF('tabelaDepartamento').clearFilters();" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgDepartamentoExclusao').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgDepartamentoEdicao" closable="false"
+			resizable="false" draggable="false" modal="true" appendTo="@(body)"
+			header="Edição de Departamento" style="font-size: 1em; font-weight:normal;">
+			<h:form id="frmEditar">
+
+
+				<h:panelGrid columns="1" cellpadding="8">
+					<h:outputText
+						value="Tem a certeza que pretende modificar os seguintes dados do departamento?" />
+				</h:panelGrid>
+
+				<h:panelGrid id="pnEditar" columns="2" cellpadding="8">
+
+					<h:outputLabel value="Data de registo : " />
+					<h:outputText value="#{MBDepartamento.departamento.dataRegisto}" />
+
+					<h:outputLabel value="Código do Departamento : " />
+					<h:inputText value="#{MBDepartamento.departamento.codDepartamento}" />
+
+					<h:outputLabel value="Nome do Departamento : " />
+					<h:inputText
+						value="#{MBDepartamento.departamento.nomeDepartamento}" />
+
+					<h:outputLabel value="Nome do Coordenador : " />
+					<h:inputText value="#{MBDepartamento.departamento.nomeCoordenador}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2" cellpadding="8">
+
+					<p:commandButton icon="ui-icon-pencil" value="Editar"
+						oncomplete="PF('dlgDepartamentoEdicao').hide(); PF('tabelaDepartamento').clearFilters();"
+						actionListener="#{MBDepartamento.editar}"
+						update=":frmDepartamento:tbDepartamento :msg" />
+
+					<p:commandButton icon="ui-icon-closethick" value="Cancelar"
+						oncomplete="PF('dlgDepartamentoEdicao').hide()" process="@(this)" />
+
+				</h:panelGrid>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgInfo" closable="true" resizable="false"
+			draggable="false" header="Informação da página"
+			style="font-size: 1em; font-weight:normal;" modal="true"
+			appendTo="@(body)">
+
+			<div style="text-align: justify;">
+				<p>
+					Na página de departamentos poderá visualizar todos os departamentos
+					que foram registados no sistema. Nesta página também poderá : <br />
+					<br /> • Registar um novo departamento;<br /> <br /> • Editar
+					dados de um determinado departamento;<br /> <br /> • Excluir um
+					determinado departamento;<br /> <br />
+				</p>
+			</div>
+
+		</p:dialog>
+
+	</ui:define>
+
+
+
+</ui:composition>

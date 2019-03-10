@@ -1,0 +1,88 @@
+<?xml version="1.0"  ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">
+
+	<ui:define name="namePage">Admin | Acessos ao sistema</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarAdmin.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuAdmin.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Acessos
+			ao sistema</h1>
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+
+
+
+		<div style="padding: 5px;">
+
+			<h:form id="frmUsersAcess">
+				<p:dataTable id="tbUsersAcess" value="#{MBLoginSys.itens}"
+					var="item" paginator="true" rows="15"
+					filteredValue="#{MBLoginSys.itensListados}"
+					emptyMessage="Nenhum registo de login registado!">
+
+					<f:facet name="header">Lista dos acessos ao sistema</f:facet>
+
+					<p:column headerText="Código de acesso" style="text-align:center;"
+						width="10">
+						<h:outputText value="#{item.id}" />
+					</p:column>
+
+					<p:column headerText="Usuário" style="text-align:center;"
+						width="20" filterBy="#{item.usuario}" filterStyle="height:25px;"
+						filterPosition="bottom">
+						<h:outputText value="#{item.usuario}" />
+					</p:column>
+
+					<p:column headerText="Descrição" style="text-align:center;"
+						width="20">
+						<h:outputText value="#{item.descricao}" />
+					</p:column>
+
+					<p:column headerText="Data de login" style="text-align:center;"
+						sortBy="#{item.data}" width="20">
+						<h:outputText value="#{item.data}">
+							<f:convertDateTime type="date" timeZone="UTC"
+								pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+
+				</p:dataTable>
+			</h:form>
+		</div>
+
+		<p:dialog widgetVar="dlgInfo" closable="true" resizable="false"
+			draggable="false" modal="true" appendTo="@(body)"
+			header="Informação da página"
+			style="font-size: 1em; font-weight:normal;">
+
+			<div style="text-align: justify;">
+				<p>
+					Na página de acessos ao sistema poderá visualizar quem e quando um
+					determinou usuário entrou no sistema, ou simplemente iniciou a
+					sessão com a sua conta. Ficando assim registado:<br /> <br /> •
+					Código do usuário;<br /> <br /> • Nome do usuário;<br /> <br />
+					• A descrição que específica a ação do usuário;<br /> <br /> •
+					Respectiva data do login;<br /> <br />
+				</p>
+			</div>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

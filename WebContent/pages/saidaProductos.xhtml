@@ -1,0 +1,118 @@
+<?xml version="1.0"  ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">
+
+	<ui:define name="namePage">Administrador | Visualização de productos</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarAdministrador.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuAdministrador.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Historial
+			de saídas</h1>
+
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+
+		<div style="padding: 5px;">
+			<h:form id="frmSaidaProducto">
+				<p:dataTable id="tbSaidaProducto" widgetVar="tabelaSaidaProducto"
+					emptyMessage="Nenhuma saída de produtos registada!"
+					paginator="true" paginatorPosition="top" rows="10"
+					scrollable="true" filteredValue="#{MBSaidaProducto.itensFiltrados}"
+					var="item" value="#{MBSaidaProducto.itens}" resizableColumns="true">
+
+					<f:facet name="header">Saída de Produtos</f:facet>
+
+					<p:column width="120" headerText="Código de saída"
+						style="text-align:center;" resizable="false">
+						<h:outputLabel value="#{item.idSaida}" />
+					</p:column>
+
+					<p:column width="159" headerText="Código de requisição"
+						style="text-align:center;" resizable="false">
+						<h:outputLabel value="#{item.requisicao.id}" />
+					</p:column>
+
+					<p:column width="220" headerText="Departamento"
+						style="text-align:center;" resizable="true"
+						filterBy="#{item.departamento.nomeDepartamento}"
+						filterPosition="bottom" filterStyle="height:25px;">
+						<h:outputLabel value=" #{item.departamento.nomeDepartamento}" />
+					</p:column>
+
+					<p:column width="200" headerText="Funcionário"
+						style="text-align:center;" resizable="true"
+						filterBy="#{item.funcionario.nomeFuncionario} #{item.funcionario.apelidoFuncionario}"
+						filterPosition="bottom" filterStyle="height:25px;">
+						<h:outputLabel
+							value=" #{item.funcionario.nomeFuncionario} #{item.funcionario.apelidoFuncionario}" />
+					</p:column>
+
+					<p:column width="130" headerText="Tipo de produto"
+						style="text-align:center;" resizable="true"
+						filterBy="#{item.producto.tipoProducto}" filterPosition="bottom"
+						filterStyle="height:25px;">
+						<h:outputText value="#{item.producto.tipoProducto}" />
+					</p:column>
+
+					<p:column width="100" headerText="Quantidade"
+						style="text-align:center;" resizable="false" sortBy="#{item.quantidadeSaida}">
+						<h:outputLabel value="#{item.quantidadeSaida}" />
+					</p:column>
+
+					<p:column width="180" headerText="Descrição"
+						style="text-align:center;" resizable="false">
+						<h:outputLabel value="#{item.descricao}" />
+					</p:column>
+
+					<p:column width="180" headerText="Data/Hora"
+						style="text-align:center;" sortBy="#{item.dataSaida}">
+						<h:outputLabel value="#{item.dataSaida}">
+							<f:convertDateTime type="date" timeZone="UTC"
+								pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputLabel>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</div>
+
+		<p:dialog widgetVar="dlgInfo" closable="true" draggable="false"
+			resizable="false" modal="true" appendTo="@(body)"
+			header="Informação da página" style="font-size: 1em; font-weight:normal;">
+
+			<div style="text-align: justify">
+
+				<p>
+					Na página de saída de produtos poderá visualizar todos os registos
+					de saídas de produtos registadas no sistema pelo responsável que
+					regista as requisições no sistema, visualizará as seguintes
+					informações para cada produto : <br /> <br /> • Código de saída;
+					<br /> <br /> • Código de requisição; <br /> <br /> •
+					Departamento;<br /> <br /> • Nome do funcionário;<br /> <br />
+					• Tipo do Produto;<br /> <br /> • Quantidade de saída;<br /> <br />
+					• Descrição;<br /> <br /> • Data/Hora da saída;<br /> <br />
+				</p>
+
+
+			</div>
+
+
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

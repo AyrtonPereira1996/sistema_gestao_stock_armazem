@@ -1,0 +1,106 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">
+
+	<ui:define name="namePage">Administrador | Historial de departamento</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarAdministrador.xhtml" />
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuAdministrador.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Historial
+			de departamentos</h1>
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+		<div style="padding: 5px;">
+			<h:form id="frmHistorialDepartamento">
+
+				<p:dataTable id="tbHistorialDepartamento"
+					widgetVar="tabelaHistorialDepartamento"
+					emptyMessage="Nenhum registo sobre ações relacionada com departamentos!"
+					paginator="true" paginatorPosition="top" rows="10"
+					scrollable="false" var="item"
+					filteredValue="#{MBHistorialDepartamento.itensFiltrados}"
+					value="#{MBHistorialDepartamento.itens}">
+
+
+					<f:facet name="header">Historial de departamentos</f:facet>
+
+					<p:column headerText="Código" style="text-align:center;" width="50">
+						<h:outputText value="#{item.idHistorialDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Código de departamento"
+						style="text-align:center;"
+						filterBy="#{item.departamento.codDepartamento}"
+						filterPosition="bottom" filterStyle="height:25px;" width="200">
+						<h:outputText value="#{item.departamento.codDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Departamento" style="text-align:center;"
+						filterBy="#{item.departamento.nomeDepartamento}"
+						filterPosition="bottom" filterStyle="height:25px;" width="200">
+						<h:outputText value="#{item.departamento.nomeDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Descrição" style="text-align:center;"
+						filterBy="#{item.descricao}" filterPosition="bottom"
+						filterStyle="height:25px;" width="250">
+						<h:outputText value="#{item.descricao}" />
+					</p:column>
+
+					<p:column headerText="Data registo" style="text-align:center;"
+						sortBy="#{item.departamento.dataRegisto}" width="178">
+						<h:outputText value="#{item.departamento.dataRegisto}">
+							<f:convertDateTime type="date" timeZone="UTC"
+								pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Data modifição" style="text-align:center;"
+						sortBy="#{item.dataModificacao}" width="178">
+						<h:outputText value="#{item.dataModificacao}">
+							<f:convertDateTime type="date" timeZone="UTC"
+								pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+		</div>
+
+		<p:dialog widgetVar="dlgInfo" closable="true" draggable="false"
+			resizable="false" modal="true" appendTo="@(body)"
+			header="Informação da página"
+			style="font-size: 1em; font-weight:normal;">
+			<div style="text-align: justify">
+				<p>
+					Na página de historial de departamentos poderá visualizar todas as
+					ações de registo, edição e de exclusão sobre qualquer registo de
+					departamento no sistema efetuado por qualquer usuário do sistema
+					também poderá visualizar as seguintes informações para cada
+					registo: <br /> <br /> • Código do registo de historial; <br />
+					<br /> • Código do departamento; <br /> <br /> • Nome do
+					departamento;<br /> <br /> • Descrição da ação;<br /> <br /> •
+					Data do registo do departamento;<br /> <br /> • Data de
+					modificação;<br /> <br />
+				</p>
+			</div>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

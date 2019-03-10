@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutLogin.xhtml">
+
+	<ui:define name="cabecalho">
+		<h:form>
+			<p:menubar style="border:none;">
+				<p:menuitem value="Página inicial" outcome="/pages/index.xhtml"
+					icon="ui-icon-home" />
+
+			</p:menubar>
+
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<!-- <meta http-equiv="refresh" content="2" url="index.xhtml" /> -->
+		<h3
+			style="color: #526e94; background-color: #ffffff; width: 50%; align: center; margin: 2.5% 25% auto 25%; border-radius: 10px; font-weight: 10;"
+			align="center">Acabou de terminar a sessão!</h3>
+		<p align="center">Faculdade de Ciências Sociais e Políticas</p>
+
+		<p:graphicImage library="images" name="about-us2.png"
+			style="margin-left:38%; height:60%;" />
+
+		<p align="center">Sistema de Gestão do Armazém</p>
+
+
+
+	</ui:define>
+
+
+
+</ui:composition>

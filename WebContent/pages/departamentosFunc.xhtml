@@ -1,0 +1,79 @@
+<?xml version="1.0"  ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSistema.xhtml">
+
+	<ui:define name="namePage">Funcionário | Visualização de departamentos</ui:define>
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuBarFuncionario.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menuFuncionario.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h1
+			style="font-size: 1.2em; margin: 0; margin-left: 0.5%; font-weight: 10; padding: 5px; border-bottom: 1.5px solid #424548; border-radius: 5px;">Departamentos</h1>
+
+		<div align="right" style="margin-top: 0.5%; margin-right: 0.5%">
+			<p:commandButton icon="ui-icon-help" onclick="PF('dlgInfo').show();" />
+		</div>
+
+		<div style="padding: 5px;">
+			<h:form id="frmDepartamento">
+				<p:dataTable id="tbDepartamento" widgetVar="tabelaDepartamento"
+					value="#{MBDepartamento.itens}" var="item"
+					emptyMessage="Nenhum Departamento registado!" scrollable="true"
+					filteredValue="#{MBDepartamento.itensListados}">
+
+					<f:facet name="header">Lista dos Departamentos</f:facet>
+
+					<p:column headerText="Código do Departamento"
+						style="text-align: center;">
+						<h:outputText value="#{item.codDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Nome do Departamento"
+						style="text-align: center;">
+						<h:outputText value="#{item.nomeDepartamento}" />
+					</p:column>
+
+					<p:column headerText="Nome do Coordenador"
+						style="text-align: center;">
+						<h:outputText value="#{item.nomeCoordenador}" />
+					</p:column>
+
+					<p:column headerText="Data de registo" style="text-align: center;">
+						<h:outputText value="#{item.dataRegisto}">
+							<f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</div>
+		<p:dialog widgetVar="dlgInfo" closable="true" resizable="false"
+			draggable="false" header="Informação da página" modal="true" appendTo="@(body)" style="font-size: 1em; font-weight:normal;">
+
+			<div style="text-align: justify;">
+				<p>
+					Na página de departamentos poderá visualizar todos os departamentos
+					que foram registados no sistema com a respetiva informação :<br />
+					<br /> • Código de identificação do departamento;<br />
+					<br /> • Nome do departamento;<br />
+					<br /> • Nome do coordenador;<br />
+					<br /> • Respectiva data de registo;<br />
+					<br />
+				</p>
+			</div>
+
+		</p:dialog>
+	</ui:define>
+</ui:composition>
